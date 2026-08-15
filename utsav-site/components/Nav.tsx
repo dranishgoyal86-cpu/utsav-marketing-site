@@ -34,16 +34,14 @@ export default function Nav() {
 
         <div className="flex items-center gap-2.5 sm:gap-3">
           <ThemeToggle />
-          {/* Placeholder — point at the real customer login/app URL when available */}
           <a
-            href="#"
+            href="https://www.theutsavapp.com/login"
             className="hidden rounded-full border border-border px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-border-strong sm:block"
           >
             Customer login
           </a>
-          {/* Placeholder — point at the real provider login/app URL when available */}
           <a
-            href="#"
+            href="https://www.theutsavapp.com/login"
             className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-opacity hover:opacity-90"
           >
             Provider login
