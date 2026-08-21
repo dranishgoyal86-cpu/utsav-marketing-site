@@ -115,9 +115,9 @@ export default function Home() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
-                href="https://www.theutsavapp.com/signup"
+                href="https://app.theutsavapp.com/signup"                
                 className="w-full rounded-full bg-accent px-6 py-3 text-center text-sm font-semibold text-accent-ink transition-opacity hover:opacity-90 sm:w-auto"
-              >
+                >
                 Start planning your event
               </a>
               {/* Intentional in-page anchor, not a dead placeholder — scrolls to the providers band below, which has the real signup CTA */}
@@ -263,7 +263,7 @@ export default function Home() {
                 </p>
                 <div className="mt-7">
                   <a
-                    href="https://www.theutsavapp.com/signup"
+                    href="https://app.theutsavapp.com/signup"
                     className="inline-block rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-ink transition-opacity hover:opacity-90"
                   >
                     Become a provider
@@ -308,13 +308,13 @@ export default function Home() {
             </h3>
             <div className="flex flex-col items-center gap-3 sm:flex-row">
               <a
-                href="https://www.theutsavapp.com/signup"
+                href="https://app.theutsavapp.com/signup"
                 className="w-full rounded-full bg-accent px-6 py-3 text-center text-sm font-semibold text-accent-ink transition-opacity hover:opacity-90 sm:w-auto"
               >
                 Start planning your event
               </a>
               <a
-                href="https://www.theutsavapp.com/signup"
+                href="https://app.theutsavapp.com/signup"
                 className="w-full rounded-full border border-border px-6 py-3 text-center text-sm font-semibold text-ink transition-colors hover:border-border-strong sm:w-auto"
               >
                 List your services
@@ -352,8 +352,8 @@ export default function Home() {
                 Account
               </p>
               <ul className="mt-3 flex flex-col gap-2">
-                <li><a href="https://www.theutsavapp.com/login" className="text-sm text-ink-secondary hover:text-ink">Customer login</a></li>
-                <li><a href="https://www.theutsavapp.com/login" className="text-sm text-ink-secondary hover:text-ink">Provider login</a></li>
+                <li><a href="https://app.theutsavapp.com/login" className="text-sm text-ink-secondary hover:text-ink">Customer login</a></li>
+                <li><a href="https://app.theutsavapp.com/login" className="text-sm text-ink-secondary hover:text-ink">Provider login</a></li>
               </ul>
             </div>
           </div>
