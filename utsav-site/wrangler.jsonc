@@ -1,7 +1,22 @@
 {
-"name": "steep-smoke-73b8",
-"compatibility_date": "2026-08-15",
-"assets": {
-"directory": "out"
-}
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Keeping the existing Worker name (steep-smoke-73b8) so this updates
+  // the same deployed Worker instead of creating a new one.
+  "name": "steep-smoke-73b8",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "steep-smoke-73b8"
+    }
+  ]
+  // No "images" binding — images.unoptimized stays true (per instruction),
+  // so Cloudflare's Image Resizing binding isn't needed. Add it here if a
+  // future feature needs real per-request image transforms.
 }
