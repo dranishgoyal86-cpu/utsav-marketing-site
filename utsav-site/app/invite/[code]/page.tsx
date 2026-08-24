@@ -12,12 +12,14 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { code } = await params;
+  const title = `You're invited! — Utsav (${code})`;
+  const description = `Test invite page for code ${code} — confirming per-code previews actually vary.`;
   return {
-    title: `You're invited! — Utsav`,
-    description: `Test invite page for code ${code} — confirming dynamic per-page previews work.`,
+    title,
+    description,
     openGraph: {
-      title: `You're invited! — Utsav`,
-      description: "Someone's celebrating, and you're invited. Open to see the details.",
+      title,
+      description,
       images: ["/brand/og-image-1200x630.png"],
     },
   };
