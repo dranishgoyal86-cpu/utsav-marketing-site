@@ -5,9 +5,10 @@ import "@fontsource/tiro-devanagari-hindi/400.css";
 import type { Metadata } from "next";
 import ToranCover from "./ToranCover";
 import DriftController from "./DriftController";
+import CoupleFrame from "./CoupleFrame";
 import FunctionRsvps from "./FunctionRsvps";
+import GettingThere from "./GettingThere";
 import WishingWall from "./WishingWall";
-import TravelDetails from "./TravelDetails";
 
 type Props = {
   params: Promise<{ code: string }>;
@@ -24,6 +25,11 @@ type InviteData = {
   partner1Name: string | null;
   partner2Name: string | null;
   hostedBy: string | null;
+  couplePhotoUrl: string | null;
+  coupleQuote: string | null;
+  venueLat: number | null;
+  venueLng: number | null;
+  mapsLink: string | null;
   hasOutstationGuests: boolean;
   travel: {
     is_outstation: boolean;
@@ -67,6 +73,11 @@ async function fetchInvite(code: string): Promise<InviteData> {
     partner1Name: inv.partner1Name || null,
     partner2Name: inv.partner2Name || null,
     hostedBy: inv.hostedBy || null,
+    couplePhotoUrl: inv.couplePhotoUrl || null,
+    coupleQuote: inv.coupleQuote || null,
+    venueLat: inv.venueLat ?? null,
+    venueLng: inv.venueLng ?? null,
+    mapsLink: inv.mapsLink || null,
     hasOutstationGuests: !!inv.hasOutstationGuests,
     travel: inv.travel || null,
   };
@@ -142,16 +153,23 @@ export default async function InvitePage({ params }: Props) {
           hostedBy={invite.hostedBy}
         />
       </DriftController>
+      <CoupleFrame photoUrl={invite.couplePhotoUrl} quote={invite.coupleQuote} />
       <FunctionRsvps
         passCode={code}
         functions={invite.functions}
+      />
+      <GettingThere
+        passCode={code}
         venueName={invite.venueName}
         venueAddress={invite.venueAddress}
+        venueLat={invite.venueLat}
+        venueLng={invite.venueLng}
+        mapsLink={invite.mapsLink}
         entryWindow={invite.entryWindow}
+        anyYes={invite.functions.some((f) => f.status === "yes")}
+        hasOutstationGuests={invite.hasOutstationGuests}
+        initialTravel={invite.travel}
       />
-      {invite.hasOutstationGuests && invite.functions.some((f) => f.status === "yes") && (
-        <TravelDetails passCode={code} initialTravel={invite.travel} />
-      )}
       <WishingWall passCode={code} eventName={invite.eventName} initialWishes={wishes} />
     </main>
   );

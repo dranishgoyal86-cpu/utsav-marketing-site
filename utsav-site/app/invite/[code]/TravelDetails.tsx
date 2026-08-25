@@ -19,6 +19,11 @@ type Travel = {
 // room_number, pickup_notes are deliberately excluded, matching
 // submit-rsvp/index.ts's own existing precedent for this exact table
 // (host-only decisions, only ever set from GuestDetailModal.js).
+//
+// Wave 4, Task 2 — no longer renders its own card. Embedded inside
+// GettingThere.tsx's single wallSection alongside venue info instead of
+// sitting in a second, disconnected box lower on the page (Wave 3's
+// original placement); the consolidation was this wave's explicit brief.
 export default function TravelDetails({ passCode, initialTravel }: { passCode: string; initialTravel: Travel }) {
   const [isOutstation, setIsOutstation] = useState(initialTravel?.is_outstation || false);
   const [arrivalDate, setArrivalDate] = useState(initialTravel?.arrival_date || "");
@@ -62,7 +67,7 @@ export default function TravelDetails({ passCode, initialTravel }: { passCode: s
   }
 
   return (
-    <div className={styles.wallSection}>
+    <div className={styles.travelEmbed}>
       <p className={styles.kicker}>Travelling from out of town?</p>
 
       <label className={styles.travelCheckboxRow}>
