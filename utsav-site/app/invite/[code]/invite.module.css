@@ -312,3 +312,40 @@
   color: #E8A020;
   text-decoration: none;
 }
+
+/* --- Travel details — Wave 3, Task 3. --- */
+.travelCheckboxRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  color: #F0DFC2;
+  cursor: pointer;
+}
+.travelRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.travelField {
+  flex: 1;
+}
+.travelLabel {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 10.5px;
+  color: #C79A5A;
+  margin-bottom: 4px;
+}
+.travelInput {
+  width: 100%;
+  background: #4A0E1E;
+  border: 1px solid rgba(212, 160, 60, 0.3);
+  border-radius: 5px;
+  padding: 8px 10px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 12.5px;
+  color: #F0DFC2;
+}
