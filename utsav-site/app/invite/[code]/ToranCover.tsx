@@ -1,4 +1,5 @@
 import styles from "./invite.module.css";
+import { inviteThemes } from "./inviteThemes";
 
 // Static server-rendered SVG — animation is pure CSS (Unveil plays via
 // `data-run="1"` set at render time below; there's no load-triggered JS
@@ -7,6 +8,16 @@ import styles from "./invite.module.css";
 // directly from the reviewed reference prototype — same numbers as
 // components/invite/motifs/TornArch.js on the app side, kept in sync
 // deliberately.
+//
+// Wave 5: colour literals replaced with inviteThemes.toran.colors lookups
+// (mechanical swap, same hex values — verified byte-identical rendered
+// output before/after) so nothing here hardcodes Toran outside the shared
+// theme file, per this wave's "no colours outside the lookup" rule. The
+// gradient stops (#6E1A2E/#2E0713) and the flat petal fill (#E8A020) stay
+// literal — they're this component's own decorative extras, not part of
+// the 6-token theme shape, same as before this refactor.
+
+const theme = inviteThemes.toran;
 
 const LEAF_POSITIONS = [
   { x: 34, y: 56 }, { x: 74, y: 72 }, { x: 114, y: 86 }, { x: 154, y: 95 },
@@ -56,19 +67,19 @@ export default function ToranCover({
             <stop offset="1" stopColor="#2E0713" stopOpacity=".9" />
           </radialGradient>
         </defs>
-        <rect width="400" height="500" fill="#4A0E1E" />
+        <rect width="400" height="500" fill={theme.colors.bg} />
         <rect width="400" height="500" fill="url(#tv)" />
 
         <path
           className={styles.archLine}
           d="M14 44 Q200 118 386 44"
-          stroke="#D4A03C"
+          stroke={theme.colors.line}
           strokeWidth={1.6}
           fill="none"
           opacity={0.85}
         />
 
-        <g fill="#D4A03C">
+        <g fill={theme.colors.line}>
           {LEAF_POSITIONS.map((pos, i) => (
             <path key={i} className={styles.leaf} d={`M${pos.x} ${pos.y}${LEAF_PATH}`} />
           ))}
@@ -83,15 +94,15 @@ export default function ToranCover({
 
         <text
           className={`${styles.anim} ${styles.a1} ${styles.sanskrit}`}
-          x="200" y="186" textAnchor="middle" fill="#D4A03C" fontSize={10}
+          x="200" y="186" textAnchor="middle" fill={theme.colors.line} fontSize={10}
         >
-          श्री गणेशाय नमः
+          {theme.kicker}
         </text>
 
         {hostedBy && (
           <text
             className={`${styles.anim} ${styles.a1} ${styles.venueLine}`}
-            x="200" y="206" textAnchor="middle" fill="#C79A5A" fontSize={9.5}
+            x="200" y="206" textAnchor="middle" fill={theme.colors.dim} fontSize={9.5}
           >
             {hostedBy}
           </text>
@@ -99,31 +110,31 @@ export default function ToranCover({
 
         {twoNames ? (
           <>
-            <text className={`${styles.anim} ${styles.a2} ${styles.names}`} x="200" y="252" textAnchor="middle" fill="#FFF3DC" fontSize={44}>
+            <text className={`${styles.anim} ${styles.a2} ${styles.names}`} x="200" y="252" textAnchor="middle" fill={theme.colors.ink} fontSize={44}>
               {partner1Name}
             </text>
             <text
               className={`${styles.anim} ${styles.a3}`}
-              x="200" y="284" textAnchor="middle" fill="#D4A03C"
+              x="200" y="284" textAnchor="middle" fill={theme.colors.accent}
               fontFamily="'Cormorant Garamond', serif" fontSize={19} fontStyle="italic"
             >
-              weds
+              {theme.connector}
             </text>
-            <text className={`${styles.anim} ${styles.a3} ${styles.names}`} x="200" y="330" textAnchor="middle" fill="#FFF3DC" fontSize={44}>
+            <text className={`${styles.anim} ${styles.a3} ${styles.names}`} x="200" y="330" textAnchor="middle" fill={theme.colors.ink} fontSize={44}>
               {partner2Name}
             </text>
           </>
         ) : (
-          <text className={`${styles.anim} ${styles.a2} ${styles.names}`} x="200" y="270" textAnchor="middle" fill="#FFF3DC" fontSize={44}>
+          <text className={`${styles.anim} ${styles.a2} ${styles.names}`} x="200" y="270" textAnchor="middle" fill={theme.colors.ink} fontSize={44}>
             {singleName}
           </text>
         )}
 
-        <path className={`${styles.anim} ${styles.a4}`} d="M150 356h100" stroke="#D4A03C" strokeWidth={0.9} opacity={0.65} />
+        <path className={`${styles.anim} ${styles.a4}`} d="M150 356h100" stroke={theme.colors.line} strokeWidth={0.9} opacity={0.65} />
         {eventDate && (
           <text
             className={`${styles.anim} ${styles.a4} ${styles.dateLine}`}
-            x="200" y="386" textAnchor="middle" fill="#F0DFC2" fontSize={11.5}
+            x="200" y="386" textAnchor="middle" fill={theme.colors.dateColor} fontSize={11.5}
           >
             {formatEventDate(eventDate)}
           </text>
@@ -131,7 +142,7 @@ export default function ToranCover({
         {venue && (
           <text
             className={`${styles.anim} ${styles.a5} ${styles.venueLine}`}
-            x="200" y="408" textAnchor="middle" fill="#C79A5A" fontSize={10}
+            x="200" y="408" textAnchor="middle" fill={theme.colors.dim} fontSize={10}
           >
             {venue}
           </text>
@@ -139,7 +150,7 @@ export default function ToranCover({
         <path
           className={`${styles.anim} ${styles.a5}`}
           d="M14 456 Q200 430 386 456"
-          stroke="#D4A03C" strokeWidth={1.1} fill="none" opacity={0.5}
+          stroke={theme.colors.line} strokeWidth={1.1} fill="none" opacity={0.5}
         />
       </svg>
     </div>
