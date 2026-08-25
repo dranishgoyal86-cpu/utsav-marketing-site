@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import ToranCover from "./ToranCover";
 import DriftController from "./DriftController";
 import FunctionRsvps from "./FunctionRsvps";
+import WishingWall from "./WishingWall";
 
 type Props = {
   params: Promise<{ code: string }>;
@@ -57,6 +58,22 @@ async function fetchInvite(code: string): Promise<InviteData> {
   };
 }
 
+async function fetchWishes(code: string) {
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/guest-pass`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify({ action: "get_wishes", pass_code: code }),
+    cache: "no-store",
+  });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.wishes || [];
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { code } = await params;
   const invite = await fetchInvite(code);
@@ -87,6 +104,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function InvitePage({ params }: Props) {
   const { code } = await params;
   const invite = await fetchInvite(code);
+  const wishes = invite ? await fetchWishes(code) : [];
 
   if (!invite) {
     return (
@@ -111,6 +129,7 @@ export default async function InvitePage({ params }: Props) {
         />
       </DriftController>
       <FunctionRsvps passCode={code} functions={invite.functions} />
+      <WishingWall passCode={code} eventName={invite.eventName} initialWishes={wishes} />
     </main>
   );
 }
