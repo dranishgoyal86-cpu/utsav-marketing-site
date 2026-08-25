@@ -29,9 +29,15 @@ function formatFunctionMeta(date: string | null, time: string | null): string {
 export default function FunctionRsvps({
   passCode,
   functions,
+  venueName,
+  venueAddress,
+  entryWindow,
 }: {
   passCode: string;
   functions: EventFunction[];
+  venueName?: string | null;
+  venueAddress?: string | null;
+  entryWindow?: string | null;
 }) {
   const [rows, setRows] = useState(functions);
   const [pending, setPending] = useState<string | null>(null);
@@ -64,8 +70,32 @@ export default function FunctionRsvps({
 
   if (rows.length === 0) return null;
 
+  // Shown once the guest has said yes to at least one function — no
+  // "getting there" to show if they're not coming. Reuses get_invite's
+  // already-returned venue/entry-window data (no new fetch), and links to
+  // the existing gate-pass page (GuestPassScreen.js, on the app's own web
+  // export) for the actual QR code rather than reproducing one here —
+  // that page already exists and already does this.
+  const anyYes = rows.some((f) => f.status === "yes");
+  const venue = venueName || venueAddress;
+
   return (
     <div className={styles.functions}>
+      {anyYes && (venue || entryWindow) && (
+        <div className={styles.gettingThere}>
+          <p className={styles.kicker}>Getting there</p>
+          {venue && <p className={styles.gettingThereText}>{venue}</p>}
+          {entryWindow && <p className={styles.gettingThereText}>Entry: {entryWindow}</p>}
+          <a
+            className={styles.gettingThereLink}
+            href={`https://app.theutsavapp.com/p/${passCode}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View your gate pass →
+          </a>
+        </div>
+      )}
       {rows.map((f) => (
         <div key={f.id} className={styles.functionRow}>
           <div>

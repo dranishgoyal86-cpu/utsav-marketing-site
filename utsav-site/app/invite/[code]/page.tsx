@@ -18,6 +18,7 @@ type InviteData = {
   eventDate: string | null;
   venueName: string | null;
   venueAddress: string | null;
+  entryWindow: string | null;
   functions: { id: string; name: string; date: string | null; time: string | null; status: "yes" | "no" | "pending" }[];
   partner1Name: string | null;
   partner2Name: string | null;
@@ -51,6 +52,7 @@ async function fetchInvite(code: string): Promise<InviteData> {
     eventDate: inv.eventDate,
     venueName: inv.venueName,
     venueAddress: inv.venueAddress,
+    entryWindow: inv.entryWindow,
     functions: inv.functions || [],
     partner1Name: inv.partner1Name || null,
     partner2Name: inv.partner2Name || null,
@@ -128,7 +130,13 @@ export default async function InvitePage({ params }: Props) {
           hostedBy={invite.hostedBy}
         />
       </DriftController>
-      <FunctionRsvps passCode={code} functions={invite.functions} />
+      <FunctionRsvps
+        passCode={code}
+        functions={invite.functions}
+        venueName={invite.venueName}
+        venueAddress={invite.venueAddress}
+        entryWindow={invite.entryWindow}
+      />
       <WishingWall passCode={code} eventName={invite.eventName} initialWishes={wishes} />
     </main>
   );
