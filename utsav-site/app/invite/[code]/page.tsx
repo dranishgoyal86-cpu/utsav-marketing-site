@@ -1,19 +1,78 @@
+import "@fontsource/cormorant-garamond/600.css";
+import "@fontsource/cormorant-garamond/400-italic.css";
+import "@fontsource/manrope/400.css";
+import "@fontsource/tiro-devanagari-hindi/400.css";
 import type { Metadata } from "next";
-import Link from "next/link";
-
-// Wave 0, Step 5 — connectivity test only. Hardcoded, no Supabase call.
-// Confirms dynamic routing + per-page generateMetadata (WhatsApp/OG preview)
-// actually work end to end on the live Cloudflare deployment before Wave 1
-// wires this up to real invite data.
+import ToranCover from "./ToranCover";
+import DriftController from "./DriftController";
+import FunctionRsvps from "./FunctionRsvps";
 
 type Props = {
   params: Promise<{ code: string }>;
 };
 
+type InviteData = {
+  guestName: string;
+  eventName: string;
+  eventDate: string | null;
+  venueName: string | null;
+  venueAddress: string | null;
+  functions: { id: string; name: string; date: string | null; time: string | null; status: "yes" | "no" | "pending" }[];
+  partner1Name: string | null;
+  partner2Name: string | null;
+  hostedBy: string | null;
+} | null;
+
+const SUPABASE_URL = "https://puvhqusauipotmiicrrm.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_ie07f0f9_X8VuS5LPxPD-g_fTxCoPHN";
+
+// Server-side only — no client-side Supabase calls, matching every other
+// guest-facing surface in this codebase. Used by both generateMetadata and
+// the page itself; Next.js dedupes identical fetches within one request.
+async function fetchInvite(code: string): Promise<InviteData> {
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/guest-pass`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify({ action: "get_invite", pass_code: code }),
+    cache: "no-store",
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  if (data.error || !data.invite) return null;
+  const inv = data.invite;
+  return {
+    guestName: inv.guestName,
+    eventName: inv.eventName,
+    eventDate: inv.eventDate,
+    venueName: inv.venueName,
+    venueAddress: inv.venueAddress,
+    functions: inv.functions || [],
+    partner1Name: inv.partner1Name || null,
+    partner2Name: inv.partner2Name || null,
+    hostedBy: inv.hostedBy || null,
+  };
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { code } = await params;
-  const title = `You're invited! — Utsav (${code})`;
-  const description = `Test invite page for code ${code} — confirming per-code previews actually vary.`;
+  const invite = await fetchInvite(code);
+
+  if (!invite) {
+    return {
+      title: "Invite not found — Utsav",
+      description: "This invite link isn't valid. Check the link and try again.",
+    };
+  }
+
+  const title = `You're invited, ${invite.guestName}! — ${invite.eventName}`;
+  const description = invite.venueName || invite.venueAddress
+    ? `Join us at ${invite.eventName}, at ${invite.venueName || invite.venueAddress}.`
+    : `Join us at ${invite.eventName}.`;
+
   return {
     title,
     description,
@@ -25,25 +84,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function InviteTestPage({ params }: Props) {
+export default async function InvitePage({ params }: Props) {
   const { code } = await params;
+  const invite = await fetchInvite(code);
+
+  if (!invite) {
+    return (
+      <main style={{ display: "flex", minHeight: "100vh", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center" }}>
+        <p style={{ fontFamily: "Manrope, sans-serif", color: "#6E6259" }}>
+          This invite link isn&apos;t valid. Check the link and try again.
+        </p>
+      </main>
+    );
+  }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-bg px-6 text-center">
-      <p className="font-mono text-xs font-medium uppercase tracking-[0.14em] text-accent">
-        Wave 0 · Step 5 test route
-      </p>
-      <h1 className="text-3xl font-semibold text-ink">You&apos;re invited!</h1>
-      <p className="text-ink-secondary">
-        This is a hardcoded placeholder confirming dynamic routing works — no
-        real invite data yet.
-      </p>
-      <p className="rounded-full border border-border bg-surface px-4 py-1.5 font-mono text-sm text-ink">
-        code: {code}
-      </p>
-      <Link href="/" className="text-sm text-accent hover:underline">
-        Back to homepage
-      </Link>
+    <main style={{ minHeight: "100vh", padding: "40px 16px 64px", background: "#FBF8F4" }}>
+      <DriftController>
+        <ToranCover
+          eventName={invite.eventName}
+          eventDate={invite.eventDate}
+          venue={invite.venueName || invite.venueAddress}
+          partner1Name={invite.partner1Name}
+          partner2Name={invite.partner2Name}
+          hostedBy={invite.hostedBy}
+        />
+      </DriftController>
+      <FunctionRsvps passCode={code} functions={invite.functions} />
     </main>
   );
 }
