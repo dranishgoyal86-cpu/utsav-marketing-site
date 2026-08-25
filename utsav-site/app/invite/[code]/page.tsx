@@ -7,6 +7,7 @@ import ToranCover from "./ToranCover";
 import DriftController from "./DriftController";
 import FunctionRsvps from "./FunctionRsvps";
 import WishingWall from "./WishingWall";
+import TravelDetails from "./TravelDetails";
 
 type Props = {
   params: Promise<{ code: string }>;
@@ -23,6 +24,15 @@ type InviteData = {
   partner1Name: string | null;
   partner2Name: string | null;
   hostedBy: string | null;
+  hasOutstationGuests: boolean;
+  travel: {
+    is_outstation: boolean;
+    arrival_date: string | null;
+    arrival_time: string | null;
+    departure_date: string | null;
+    departure_time: string | null;
+    pickup_needed: boolean;
+  } | null;
 } | null;
 
 const SUPABASE_URL = "https://puvhqusauipotmiicrrm.supabase.co";
@@ -57,6 +67,8 @@ async function fetchInvite(code: string): Promise<InviteData> {
     partner1Name: inv.partner1Name || null,
     partner2Name: inv.partner2Name || null,
     hostedBy: inv.hostedBy || null,
+    hasOutstationGuests: !!inv.hasOutstationGuests,
+    travel: inv.travel || null,
   };
 }
 
@@ -137,6 +149,9 @@ export default async function InvitePage({ params }: Props) {
         venueAddress={invite.venueAddress}
         entryWindow={invite.entryWindow}
       />
+      {invite.hasOutstationGuests && invite.functions.some((f) => f.status === "yes") && (
+        <TravelDetails passCode={code} initialTravel={invite.travel} />
+      )}
       <WishingWall passCode={code} eventName={invite.eventName} initialWishes={wishes} />
     </main>
   );
