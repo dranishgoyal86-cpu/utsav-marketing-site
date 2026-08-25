@@ -289,3 +289,26 @@
   color: #C79A5A;
   margin: 0 0 12px;
 }
+
+/* --- Getting there — Wave 3, Task 2. Links out to the existing gate-pass
+   page rather than reproducing a QR code here. --- */
+.gettingThere {
+  border-bottom: 1px solid rgba(212, 160, 60, 0.22);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+.gettingThereText {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  color: #F0DFC2;
+  margin: 4px 0;
+}
+.gettingThereLink {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #E8A020;
+  text-decoration: none;
+}
