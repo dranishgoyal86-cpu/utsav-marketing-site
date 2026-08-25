@@ -7,14 +7,18 @@ export type InviteTheme = {
   colors: {
     bg: string;
     ink: string;
-    dateColor: string;
+    dateColor?: string;
     dim: string;
     line: string;
-    accent: string;
+    accent?: string;
+    soft?: string;
+    body?: string;
   };
-  motif: "arch" | "bloom";
-  connector: string;
+  motif?: "arch" | "bloom";
+  connector?: string;
   kicker: string;
+  motion?: boolean;
+  layout?: "single-card";
 };
 
 export const inviteThemes: Record<string, InviteTheme> = {
@@ -43,6 +47,23 @@ export const inviteThemes: Record<string, InviteTheme> = {
     motif: "bloom",
     connector: "&",
     kicker: "TOGETHER WITH THEIR FAMILIES",
+  },
+  // Wave 6 — a different page, not a third palette. No motif/connector:
+  // no arch, no bloom, no "weds"/"&" text at all. motion:false and
+  // layout:'single-card' are read explicitly by page.tsx to skip the
+  // Unveil/Drift/multi-pane rendering path entirely for this design.
+  stillness: {
+    colors: {
+      bg: "#EFEDEA",
+      ink: "#22201D",
+      dim: "#6B655E",
+      line: "#8C867E",
+      soft: "#C9C3BA",
+      body: "#4A453F",
+    },
+    motion: false,
+    layout: "single-card",
+    kicker: "IN LOVING MEMORY",
   },
 };
 

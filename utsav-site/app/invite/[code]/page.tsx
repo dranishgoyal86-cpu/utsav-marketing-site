@@ -1,10 +1,12 @@
 import "@fontsource/cormorant-garamond/600.css";
+import "@fontsource/cormorant-garamond/400.css";
 import "@fontsource/cormorant-garamond/400-italic.css";
 import "@fontsource/manrope/400.css";
 import "@fontsource/tiro-devanagari-hindi/400.css";
 import type { Metadata } from "next";
 import ToranCover from "./ToranCover";
 import KalamkariCover from "./KalamkariCover";
+import StillnessCover from "./StillnessCover";
 import DriftController from "./DriftController";
 import CoupleFrame from "./CoupleFrame";
 import FunctionRsvps from "./FunctionRsvps";
@@ -29,6 +31,11 @@ type InviteData = {
   hostedBy: string | null;
   couplePhotoUrl: string | null;
   coupleQuote: string | null;
+  subjectNameLine1: string | null;
+  subjectNameLine2: string | null;
+  subjectYears: string | null;
+  detailLine1: string | null;
+  detailLine2: string | null;
   venueLat: number | null;
   venueLng: number | null;
   mapsLink: string | null;
@@ -78,6 +85,11 @@ async function fetchInvite(code: string): Promise<InviteData> {
     hostedBy: inv.hostedBy || null,
     couplePhotoUrl: inv.couplePhotoUrl || null,
     coupleQuote: inv.coupleQuote || null,
+    subjectNameLine1: inv.subjectNameLine1 || null,
+    subjectNameLine2: inv.subjectNameLine2 || null,
+    subjectYears: inv.subjectYears || null,
+    detailLine1: inv.detailLine1 || null,
+    detailLine2: inv.detailLine2 || null,
     venueLat: inv.venueLat ?? null,
     venueLng: inv.venueLng ?? null,
     mapsLink: inv.mapsLink || null,
@@ -132,7 +144,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function InvitePage({ params }: Props) {
   const { code } = await params;
   const invite = await fetchInvite(code);
-  const wishes = invite ? await fetchWishes(code) : [];
 
   if (!invite) {
     return (
@@ -143,6 +154,27 @@ export default async function InvitePage({ params }: Props) {
       </main>
     );
   }
+
+  // Wave 6: Stillness is a different page, not a third Unveil/Drift
+  // variant sharing the multi-pane layout below. No DriftController (that
+  // component only exists to pause the Toran/Kalamkari petal-fall layer —
+  // there is no such layer here), no couple/functions/getting-there/
+  // wishing-wall panes. Single card, nothing else, per the reference.
+  if (invite.design === "stillness") {
+    return (
+      <main style={{ minHeight: "100vh", padding: "40px 16px 64px", background: "#FBF8F4", display: "flex", alignItems: "center" }}>
+        <StillnessCover
+          nameLine1={invite.subjectNameLine1}
+          nameLine2={invite.subjectNameLine2}
+          years={invite.subjectYears}
+          detailLine1={invite.detailLine1}
+          detailLine2={invite.detailLine2}
+        />
+      </main>
+    );
+  }
+
+  const wishes = await fetchWishes(code);
 
   return (
     <main style={{ minHeight: "100vh", padding: "40px 16px 64px", background: "#FBF8F4" }}>
