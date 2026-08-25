@@ -4,6 +4,7 @@ import "@fontsource/manrope/400.css";
 import "@fontsource/tiro-devanagari-hindi/400.css";
 import type { Metadata } from "next";
 import ToranCover from "./ToranCover";
+import KalamkariCover from "./KalamkariCover";
 import DriftController from "./DriftController";
 import CoupleFrame from "./CoupleFrame";
 import FunctionRsvps from "./FunctionRsvps";
@@ -15,6 +16,7 @@ type Props = {
 };
 
 type InviteData = {
+  design: string;
   guestName: string;
   eventName: string;
   eventDate: string | null;
@@ -63,6 +65,7 @@ async function fetchInvite(code: string): Promise<InviteData> {
   if (data.error || !data.invite) return null;
   const inv = data.invite;
   return {
+    design: inv.design || "toran",
     guestName: inv.guestName,
     eventName: inv.eventName,
     eventDate: inv.eventDate,
@@ -144,14 +147,25 @@ export default async function InvitePage({ params }: Props) {
   return (
     <main style={{ minHeight: "100vh", padding: "40px 16px 64px", background: "#FBF8F4" }}>
       <DriftController>
-        <ToranCover
-          eventName={invite.eventName}
-          eventDate={invite.eventDate}
-          venue={invite.venueName || invite.venueAddress}
-          partner1Name={invite.partner1Name}
-          partner2Name={invite.partner2Name}
-          hostedBy={invite.hostedBy}
-        />
+        {invite.design === "kalamkari" ? (
+          <KalamkariCover
+            eventName={invite.eventName}
+            eventDate={invite.eventDate}
+            venue={invite.venueName || invite.venueAddress}
+            partner1Name={invite.partner1Name}
+            partner2Name={invite.partner2Name}
+            hostedBy={invite.hostedBy}
+          />
+        ) : (
+          <ToranCover
+            eventName={invite.eventName}
+            eventDate={invite.eventDate}
+            venue={invite.venueName || invite.venueAddress}
+            partner1Name={invite.partner1Name}
+            partner2Name={invite.partner2Name}
+            hostedBy={invite.hostedBy}
+          />
+        )}
       </DriftController>
       <CoupleFrame photoUrl={invite.couplePhotoUrl} quote={invite.coupleQuote} />
       <FunctionRsvps
