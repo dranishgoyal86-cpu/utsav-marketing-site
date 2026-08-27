@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./invite.module.css";
+import NightBloomCard from "./NightBloomCard";
 
 type EventFunction = {
   id: string;
@@ -9,6 +10,8 @@ type EventFunction = {
   date: string | null;
   time: string | null;
   status: "yes" | "no" | "pending";
+  templateId: string | null;
+  headlineText: string | null;
 };
 
 function formatFunctionMeta(date: string | null, time: string | null): string {
@@ -35,6 +38,16 @@ export default function FunctionRsvps({
 }) {
   const [rows, setRows] = useState(functions);
   const [pending, setPending] = useState<string | null>(null);
+  // Wave 9 — keyed by function id, same shape as PlanView.js's
+  // openFunctionSections on the app side: closed by default, one tap opens
+  // just that function's card. Only ever consulted for a function that has
+  // a per-function template_id set — a plain function has nothing to
+  // expand into, so this stays irrelevant for it.
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+  function toggle(functionId: string) {
+    setExpanded((prev) => ({ ...prev, [functionId]: !prev[functionId] }));
+  }
 
   async function respond(functionId: string, status: "yes" | "no") {
     setPending(functionId);
@@ -66,12 +79,8 @@ export default function FunctionRsvps({
 
   return (
     <div className={styles.functions}>
-      {rows.map((f) => (
-        <div key={f.id} className={styles.functionRow}>
-          <div>
-            <div className={styles.functionName}>{f.name}</div>
-            <div className={styles.functionMeta}>{formatFunctionMeta(f.date, f.time)}</div>
-          </div>
+      {rows.map((f) => {
+        const rsvpBtns = (
           <div className={styles.rsvpBtns}>
             <button
               type="button"
@@ -92,8 +101,43 @@ export default function FunctionRsvps({
               No
             </button>
           </div>
-        </div>
-      ))}
+        );
+
+        // No per-function design set — exactly today's row, byte-for-byte,
+        // no chevron, nothing new to look at.
+        if (!f.templateId) {
+          return (
+            <div key={f.id} className={styles.functionRow}>
+              <div>
+                <div className={styles.functionName}>{f.name}</div>
+                <div className={styles.functionMeta}>{formatFunctionMeta(f.date, f.time)}</div>
+              </div>
+              {rsvpBtns}
+            </div>
+          );
+        }
+
+        const isOpen = !!expanded[f.id];
+        return (
+          <div key={f.id} className={styles.functionRow} style={{ flexDirection: "column", alignItems: "stretch" }}>
+            <button type="button" className={styles.nbTrigger} onClick={() => toggle(f.id)} aria-expanded={isOpen}>
+              <div>
+                <div className={styles.functionName}>{f.name}</div>
+                <div className={styles.functionMeta}>{formatFunctionMeta(f.date, f.time)}</div>
+              </div>
+              <span className={styles.nbCaret}>{isOpen ? "▾" : "▸"}</span>
+            </button>
+            {isOpen && (
+              <>
+                {f.templateId === "nightbloom" && (
+                  <NightBloomCard name={f.name} date={f.date} time={f.time} headlineText={f.headlineText} />
+                )}
+                <div className={styles.nbRsvpBtns}>{rsvpBtns}</div>
+              </>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

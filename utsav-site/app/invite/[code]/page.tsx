@@ -5,6 +5,7 @@ import "@fontsource/manrope/400.css";
 import "@fontsource/tiro-devanagari-hindi/400.css";
 import "@fontsource/fraunces/600.css";
 import "@fontsource/fraunces/300-italic.css";
+import "@fontsource/fraunces/700.css";
 import type { Metadata } from "next";
 import ToranCover from "./ToranCover";
 import KalamkariCover from "./KalamkariCover";
@@ -28,7 +29,7 @@ type InviteData = {
   venueName: string | null;
   venueAddress: string | null;
   entryWindow: string | null;
-  functions: { id: string; name: string; date: string | null; time: string | null; status: "yes" | "no" | "pending" }[];
+  functions: { id: string; name: string; date: string | null; time: string | null; status: "yes" | "no" | "pending"; templateId: string | null; headlineText: string | null }[];
   partner1Name: string | null;
   partner2Name: string | null;
   hostedBy: string | null;

@@ -431,3 +431,116 @@
   font-size: 12.5px;
   color: #F0DFC2;
 }
+
+/* --- Wave 9 — Night Bloom, a per-FUNCTION card, not a whole-invite design.
+   .functionRow above stays completely untouched for every function with no
+   template_id set; these classes only ever apply inside one expanded row.
+   .nbTrigger reuses .functionRow's own layout so the tap target looks
+   identical to a plain row until expanded (per Task 2: "functions with no
+   per-function design set continue rendering exactly as they do today"). --- */
+.nbTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+.nbCaret {
+  font-size: 13px;
+  color: #C79A5A;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+.nbCard {
+  position: relative;
+  overflow: hidden;
+  margin-top: 12px;
+  border-radius: 14px;
+  background: #0C0A12;
+}
+.nbGlow1 {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 18% 88%, rgba(144, 102, 255, 0.55), transparent 70%);
+  pointer-events: none;
+}
+.nbGlow2 {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 88% 14%, rgba(255, 79, 158, 0.42), transparent 60%);
+  pointer-events: none;
+}
+.nbDot {
+  position: absolute;
+  border-radius: 50%;
+  background: #FFFFFF;
+  opacity: 0.48;
+  pointer-events: none;
+}
+.nbContent {
+  position: relative;
+  padding: 28px 24px 26px;
+}
+.nbKicker {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  background: linear-gradient(45deg, #9066FF 0%, #FF4F9E 55%, #FF9A3D 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.nbDivider {
+  width: 32px;
+  height: 2px;
+  margin: 10px 0 16px;
+  border-radius: 1px;
+  background: linear-gradient(45deg, #9066FF 0%, #FF4F9E 55%, #FF9A3D 100%);
+}
+/* Reference specifies 52px, sized for a full 400px-wide SVG cover stage;
+   this card sits inside the 480px .functions column with its own 24px
+   padding, so scaled down to 40px to avoid wider function names overflowing
+   — will re-check against a real rendered screenshot and adjust if it still
+   crowds a long name. */
+.nbHeadline {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #F5F2FF;
+}
+.nbDetails {
+  margin-top: 18px;
+}
+.nbDetailLine {
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: #CFC6E8;
+  margin-top: 5px;
+}
+.nbDetailLine:first-child {
+  color: #CFC6E8;
+}
+.nbDetailLine + .nbDetailLine {
+  color: #8E85AC;
+  font-size: 10px;
+}
+.nbRsvpBtns {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(245, 242, 255, 0.1);
+}

@@ -21,6 +21,11 @@ export type InviteTheme = {
   layout?: "single-card";
 };
 
+// Wave 9 — Night Bloom is NOT a whole-invite design and has no entry here.
+// It styles one function's expanded card only (event_functions.template_id),
+// looked up separately in NightBloomCard.tsx — it never competes with an
+// event's overall design the way toran/kalamkari/stillness/ivory do.
+
 export const inviteThemes: Record<string, InviteTheme> = {
   toran: {
     colors: {
