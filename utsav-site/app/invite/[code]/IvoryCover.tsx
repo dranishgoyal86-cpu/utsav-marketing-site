@@ -126,6 +126,13 @@ export default function IvoryCover({
 
         <path className={`${styles.anim} ${styles.a4}`} d="M52 400h296" stroke={theme.colors.line} strokeWidth={1} />
 
+        {/* Reference specifies date-left/venue-right on one row (x=348,
+            text-anchor end) — verified live against this app's real venue
+            data (full addresses, not short names) and that layout
+            collides: a long address's right-anchored text runs left into
+            the date. Stacked instead, both left-aligned — a real
+            correction from live rendering, not the reference's literal
+            coordinates. */}
         {eventDate && (
           <text
             className={`${styles.anim} ${styles.a4}`}
@@ -138,8 +145,8 @@ export default function IvoryCover({
         {venue && (
           <text
             className={`${styles.anim} ${styles.a5}`}
-            x="348" y="428" textAnchor="end"
-            fill={theme.colors.dim} fontFamily="'Manrope', sans-serif" fontSize={10} letterSpacing={2}
+            x="52" y="448" textAnchor="start"
+            fill={theme.colors.dim} fontFamily="'Manrope', sans-serif" fontSize={10} letterSpacing={1}
           >
             {venue}
           </text>
