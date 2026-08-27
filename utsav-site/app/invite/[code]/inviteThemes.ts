@@ -14,7 +14,7 @@ export type InviteTheme = {
     soft?: string;
     body?: string;
   };
-  motif?: "arch" | "bloom";
+  motif?: "arch" | "bloom" | "minimal";
   connector?: string;
   kicker: string;
   motion?: boolean;
@@ -64,6 +64,25 @@ export const inviteThemes: Record<string, InviteTheme> = {
     motion: false,
     layout: "single-card",
     kicker: "IN LOVING MEMORY",
+  },
+  // Wave 8 — a second neutral, non-Hindu-coded option alongside Kalamkari.
+  // No tradition-specific symbols, same discipline as Kalamkari. kicker
+  // here is the DEFAULT only — event_invite_content.kicker_text (new,
+  // Wave 8) overrides it when a host sets one; the mockup's literal
+  // "SAVE THE DATE" doesn't fit every wedding, so "YOU'RE INVITED" ships
+  // as the real default instead.
+  ivory: {
+    colors: {
+      bg: "#FAF7F2",
+      ink: "#1C1A17",
+      accent: "#E8A020",
+      line: "#DED6CB",
+      dim: "#8A8078",
+      dateColor: "#4A443E",
+    },
+    motif: "minimal",
+    connector: "and",
+    kicker: "YOU'RE INVITED",
   },
 };
 

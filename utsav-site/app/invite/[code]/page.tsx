@@ -3,9 +3,12 @@ import "@fontsource/cormorant-garamond/400.css";
 import "@fontsource/cormorant-garamond/400-italic.css";
 import "@fontsource/manrope/400.css";
 import "@fontsource/tiro-devanagari-hindi/400.css";
+import "@fontsource/fraunces/600.css";
+import "@fontsource/fraunces/300-italic.css";
 import type { Metadata } from "next";
 import ToranCover from "./ToranCover";
 import KalamkariCover from "./KalamkariCover";
+import IvoryCover from "./IvoryCover";
 import StillnessCover from "./StillnessCover";
 import DriftController from "./DriftController";
 import CoupleFrame from "./CoupleFrame";
@@ -31,6 +34,7 @@ type InviteData = {
   hostedBy: string | null;
   couplePhotoUrl: string | null;
   coupleQuote: string | null;
+  kickerText: string | null;
   subjectNameLine1: string | null;
   subjectNameLine2: string | null;
   subjectYears: string | null;
@@ -85,6 +89,7 @@ async function fetchInvite(code: string): Promise<InviteData> {
     hostedBy: inv.hostedBy || null,
     couplePhotoUrl: inv.couplePhotoUrl || null,
     coupleQuote: inv.coupleQuote || null,
+    kickerText: inv.kickerText || null,
     subjectNameLine1: inv.subjectNameLine1 || null,
     subjectNameLine2: inv.subjectNameLine2 || null,
     subjectYears: inv.subjectYears || null,
@@ -187,6 +192,16 @@ export default async function InvitePage({ params }: Props) {
             partner1Name={invite.partner1Name}
             partner2Name={invite.partner2Name}
             hostedBy={invite.hostedBy}
+          />
+        ) : invite.design === "ivory" ? (
+          <IvoryCover
+            eventName={invite.eventName}
+            eventDate={invite.eventDate}
+            venue={invite.venueName || invite.venueAddress}
+            partner1Name={invite.partner1Name}
+            partner2Name={invite.partner2Name}
+            hostedBy={invite.hostedBy}
+            kickerText={invite.kickerText}
           />
         ) : (
           <ToranCover
