@@ -14,9 +14,12 @@ export type InviteTheme = {
     soft?: string;
     body?: string;
   };
-  motif?: "arch" | "bloom" | "minimal";
+  motif?: "arch" | "bloom" | "minimal" | "diya";
   connector?: string;
-  kicker: string;
+  // Optional as of Wave 10 — Diya has no single universal default kicker
+  // string (it serves 3 different real occasions), so its component
+  // computes a default from real event data instead of reading theme.kicker.
+  kicker?: string;
   motion?: boolean;
   layout?: "single-card";
 };
@@ -88,6 +91,27 @@ export const inviteThemes: Record<string, InviteTheme> = {
     motif: "minimal",
     connector: "and",
     kicker: "YOU'RE INVITED",
+  },
+  // Wave 10 — the first design that isn't for a wedding: housewarmings,
+  // pujas, festivals. No connector (no couple), no fixed kicker default —
+  // DiyaCover.tsx computes its kicker/headline from real event data
+  // (kicker_text/headline_text overrides, falling back to the event's own
+  // name), same discipline as every design since Ivory never shipping
+  // occasion-specific hardcoded copy.
+  diya: {
+    colors: {
+      bg: "#FDF4E3",
+      ink: "#3A2416",
+      dateColor: "#7A6248",
+      dim: "#7A6248",
+      line: "#D8B98A",
+      // Rangoli line-work + kicker text colour, per the reference — the
+      // flame amber (#E8A020) and diya-bowl brown (#B5542A) stay literal in
+      // DiyaCover.tsx itself, same "decorative extras, not part of the
+      // 6-token theme shape" precedent Toran's own petal fill already set.
+      accent: "#C2381F",
+    },
+    motif: "diya",
   },
 };
 

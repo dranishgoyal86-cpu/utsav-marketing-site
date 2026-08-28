@@ -11,6 +11,7 @@ import ToranCover from "./ToranCover";
 import KalamkariCover from "./KalamkariCover";
 import IvoryCover from "./IvoryCover";
 import StillnessCover from "./StillnessCover";
+import DiyaCover from "./DiyaCover";
 import DriftController from "./DriftController";
 import CoupleFrame from "./CoupleFrame";
 import FunctionRsvps from "./FunctionRsvps";
@@ -36,6 +37,7 @@ type InviteData = {
   couplePhotoUrl: string | null;
   coupleQuote: string | null;
   kickerText: string | null;
+  headlineText: string | null;
   subjectNameLine1: string | null;
   subjectNameLine2: string | null;
   subjectYears: string | null;
@@ -91,6 +93,7 @@ async function fetchInvite(code: string): Promise<InviteData> {
     couplePhotoUrl: inv.couplePhotoUrl || null,
     coupleQuote: inv.coupleQuote || null,
     kickerText: inv.kickerText || null,
+    headlineText: inv.headlineText || null,
     subjectNameLine1: inv.subjectNameLine1 || null,
     subjectNameLine2: inv.subjectNameLine2 || null,
     subjectYears: inv.subjectYears || null,
@@ -203,6 +206,15 @@ export default async function InvitePage({ params }: Props) {
             partner2Name={invite.partner2Name}
             hostedBy={invite.hostedBy}
             kickerText={invite.kickerText}
+          />
+        ) : invite.design === "diya" ? (
+          <DiyaCover
+            eventName={invite.eventName}
+            eventDate={invite.eventDate}
+            venue={invite.venueName || invite.venueAddress}
+            hostedBy={invite.hostedBy}
+            kickerText={invite.kickerText}
+            headlineText={invite.headlineText}
           />
         ) : (
           <ToranCover
