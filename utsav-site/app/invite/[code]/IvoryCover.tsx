@@ -35,6 +35,9 @@ export default function IvoryCover({
   partner2Name,
   hostedBy,
   kickerText,
+  functionName,
+  functionDate,
+  functionTime,
 }: {
   eventName: string;
   eventDate: string | null;
@@ -43,9 +46,16 @@ export default function IvoryCover({
   partner2Name?: string | null;
   hostedBy?: string | null;
   kickerText?: string | null;
+  functionName?: string | null;
+  functionDate?: string | null;
+  functionTime?: string | null;
 }) {
   const twoNames = !!(partner1Name && partner2Name);
   const singleName = partner1Name && !partner2Name ? partner1Name : !partner1Name ? eventName : null;
+  const isFunctionCard = !!functionName;
+  const dateText = isFunctionCard
+    ? [functionDate && formatEventDate(functionDate), functionTime].filter(Boolean).join(" · ")
+    : formatEventDate(eventDate);
   // Wave 8: "SAVE THE DATE" (the mockup's literal string) doesn't fit
   // every wedding where the invite itself carries full details — a real
   // host-editable field (event_invite_content.kicker_text) overrides
@@ -53,7 +63,7 @@ export default function IvoryCover({
   const kicker = kickerText || theme.kicker;
 
   return (
-    <div className={styles.stage} data-motion="unveil" data-run="1">
+    <div className={isFunctionCard ? `${styles.stage} ${styles.instant}` : styles.stage} data-motion="unveil" data-run="1">
       <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
         <rect width="400" height="500" fill={theme.colors.bg} />
 
@@ -124,6 +134,20 @@ export default function IvoryCover({
           </text>
         )}
 
+        {/* Wave 11 — which function this card is for. New line, not a
+            replacement of the kicker (kickerText/theme.kicker above is
+            event identity, not function identity). Left-aligned, same
+            slot logic as everything else on this design. */}
+        {isFunctionCard && (
+          <text
+            className={`${styles.anim} ${styles.a3}`}
+            x="52" y="380" textAnchor="start"
+            fill={theme.colors.accent} fontFamily="'Manrope', sans-serif" fontWeight={700} fontSize={9.5} letterSpacing={2}
+          >
+            {functionName!.toUpperCase()}
+          </text>
+        )}
+
         <path className={`${styles.anim} ${styles.a4}`} d="M52 400h296" stroke={theme.colors.line} strokeWidth={1} />
 
         {/* Reference specifies date-left/venue-right on one row (x=348,
@@ -133,13 +157,13 @@ export default function IvoryCover({
             the date. Stacked instead, both left-aligned — a real
             correction from live rendering, not the reference's literal
             coordinates. */}
-        {eventDate && (
+        {dateText && (
           <text
             className={`${styles.anim} ${styles.a4}`}
             x="52" y="428" textAnchor="start"
             fill={theme.colors.dateColor} fontFamily="'Manrope', sans-serif" fontWeight={600} fontSize={11} letterSpacing={1.2}
           >
-            {formatEventDate(eventDate)}
+            {dateText}
           </text>
         )}
         {venue && (

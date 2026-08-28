@@ -56,6 +56,19 @@
   opacity: 0;
 }
 
+/* Wave 11 — per-function cards skip the Unveil stagger entirely. That
+   0.9-2.5s cascade is calibrated for the whole page's initial load, where
+   a slow reveal reads as a hero moment; reused unmodified inside a
+   function's own expanded card, it meant a guest who just tapped to open
+   it saw an apparently-empty card for over two seconds before the date
+   line faded in — verified live, not assumed. Applied on the .stage
+   wrapper alongside styles.instant rather than touching every individual
+   .anim/.aN element. */
+.instant .anim {
+  opacity: 1 !important;
+  animation: none !important;
+}
+
 /* --- Unveil: plays once on load --- */
 .archLine {
   stroke-dasharray: 520;

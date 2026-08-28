@@ -41,6 +41,9 @@ export default function ToranCover({
   partner1Name,
   partner2Name,
   hostedBy,
+  functionName,
+  functionDate,
+  functionTime,
 }: {
   eventName: string;
   eventDate: string | null;
@@ -48,6 +51,13 @@ export default function ToranCover({
   partner1Name?: string | null;
   partner2Name?: string | null;
   hostedBy?: string | null;
+  // Wave 11 — set only when this card represents one function within the
+  // event (Night Bloom's per-function mechanism, extended to this design
+  // per the brief's decision: Toran keeps the couple identity, it isn't
+  // stripped down to a function-only card the way Night Bloom is).
+  functionName?: string | null;
+  functionDate?: string | null;
+  functionTime?: string | null;
 }) {
   // Names slot: two structured partner names when both are present (the
   // reference's original "weds" layout), one structured name when only
@@ -56,10 +66,23 @@ export default function ToranCover({
   // fallback for any event with no event_invite_content row yet — the
   // behavior this page already shipped with, unchanged for those events.
   const twoNames = !!(partner1Name && partner2Name);
+  const isFunctionCard = !!functionName;
+  // Per-function mode shows the function's own date/time in the existing
+  // date slot (more relevant here than the event's overall date) — venue
+  // stays the event's, event_functions has no venue field of its own.
+  const dateText = isFunctionCard
+    ? [functionDate && formatEventDate(functionDate), functionTime].filter(Boolean).join(" · ")
+    : formatEventDate(eventDate);
   const singleName = partner1Name && !partner2Name ? partner1Name : !partner1Name ? eventName : null;
+  // Function-card mode adds a new line (the function name) right after the
+  // couple names — verified live that the original y=356 divider sat too
+  // close to it (a two-line name's descenders, e.g. "Priya", visibly
+  // collided with the tag). Shifted down only in this mode; the shipped
+  // whole-event layout stays byte-identical.
+  const bodyY = isFunctionCard ? 372 : 356;
 
   return (
-    <div className={styles.stage} data-motion="unveil" data-run="1">
+    <div className={isFunctionCard ? `${styles.stage} ${styles.instant}` : styles.stage} data-motion="unveil" data-run="1">
       <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="tv" cx="50%" cy="30%" r="72%">
@@ -130,19 +153,33 @@ export default function ToranCover({
           </text>
         )}
 
-        <path className={`${styles.anim} ${styles.a4}`} d="M150 356h100" stroke={theme.colors.line} strokeWidth={0.9} opacity={0.65} />
-        {eventDate && (
+        {/* Wave 11 — which function this card is for, when in per-function
+            mode. New line, not a replacement of the kicker (that's the
+            Sanskrit shloka above — event identity, not function identity),
+            same small-caps role as the hostedBy line just uses the accent
+            colour instead to read as its own distinct tag. */}
+        {isFunctionCard && (
+          <text
+            className={`${styles.anim} ${styles.a3} ${styles.venueLine}`}
+            x="200" y={bodyY - 8} textAnchor="middle" fill={theme.colors.accent} fontSize={10} letterSpacing={2}
+          >
+            {functionName!.toUpperCase()}
+          </text>
+        )}
+
+        <path className={`${styles.anim} ${styles.a4}`} d={`M150 ${bodyY}h100`} stroke={theme.colors.line} strokeWidth={0.9} opacity={0.65} />
+        {dateText && (
           <text
             className={`${styles.anim} ${styles.a4} ${styles.dateLine}`}
-            x="200" y="386" textAnchor="middle" fill={theme.colors.dateColor} fontSize={11.5}
+            x="200" y={bodyY + 30} textAnchor="middle" fill={theme.colors.dateColor} fontSize={11.5}
           >
-            {formatEventDate(eventDate)}
+            {dateText}
           </text>
         )}
         {venue && (
           <text
             className={`${styles.anim} ${styles.a5} ${styles.venueLine}`}
-            x="200" y="408" textAnchor="middle" fill={theme.colors.dim} fontSize={10}
+            x="200" y={bodyY + 52} textAnchor="middle" fill={theme.colors.dim} fontSize={10}
           >
             {venue}
           </text>

@@ -63,6 +63,9 @@ export default function DiyaCover({
   hostedBy,
   kickerText,
   headlineText,
+  functionName,
+  functionDate,
+  functionTime,
 }: {
   eventName: string;
   eventDate: string | null;
@@ -70,21 +73,34 @@ export default function DiyaCover({
   hostedBy?: string | null;
   kickerText?: string | null;
   headlineText?: string | null;
+  // Wave 11 — per-function mode. Diya has no couple to keep (see the
+  // reference), so unlike Toran/Kalamkari/Ivory this doesn't add a new
+  // line — it's the same shape as Night Bloom already established:
+  // kicker/headline driven by the function's own name/headline_text
+  // instead of the event's, date/time swapped to the function's own.
+  functionName?: string | null;
+  functionDate?: string | null;
+  functionTime?: string | null;
 }) {
+  const isFunctionCard = !!functionName;
   // Neither field ships a fixed occasion-specific default (no "GRIHA
-  // PRAVESH", no "Our new beginning") — both fall back to the event's own
-  // real name, exactly like every other design's "no hardcoded copy" rule.
+  // PRAVESH", no "Our new beginning") — both fall back to the real name in
+  // scope (function name in per-function mode, else the event's own name),
+  // exactly like every other design's "no hardcoded copy" rule.
   // Independently overridable so a host CAN differentiate them, same
   // kicker_text/headline_text mechanism Ivory and Night Bloom established.
-  const kicker = (kickerText || eventName || "").toUpperCase();
-  const headline = headlineText || eventName;
+  const kicker = (kickerText || functionName || eventName || "").toUpperCase();
+  const headline = headlineText || functionName || eventName;
   const headlineLines = wrapHeadline(headline || "");
+  const dateText = isFunctionCard
+    ? [functionDate && formatEventDate(functionDate), functionTime].filter(Boolean).join(" · ")
+    : formatEventDate(eventDate);
   // Divider/date/venue shift down when the headline wraps to a second line
   // — computed, not hardcoded, so it stays correct for any real name length.
   const bodyY = 300 + (headlineLines.length > 1 ? 26 : 0);
 
   return (
-    <div className={styles.stage} data-motion="unveil" data-run="1">
+    <div className={isFunctionCard ? `${styles.stage} ${styles.instant}` : styles.stage} data-motion="unveil" data-run="1">
       <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="dyGlow" cx="50%" cy="92%" r="62%">
@@ -138,12 +154,12 @@ export default function DiyaCover({
         </text>
 
         <path className={`${styles.anim} ${styles.a4}`} d={`M150 ${bodyY}h100`} stroke={theme.colors.line} strokeWidth={0.9} opacity={0.65} />
-        {eventDate && (
+        {dateText && (
           <text
             className={`${styles.anim} ${styles.a4} ${styles.dateLine}`}
             x="200" y={bodyY + 30} textAnchor="middle" fill={theme.colors.dateColor} fontSize={11.5}
           >
-            {formatEventDate(eventDate)}
+            {dateText}
           </text>
         )}
         {venue && (

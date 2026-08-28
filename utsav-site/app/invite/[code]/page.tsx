@@ -228,9 +228,22 @@ export default async function InvitePage({ params }: Props) {
         )}
       </DriftController>
       <CoupleFrame photoUrl={invite.couplePhotoUrl} quote={invite.coupleQuote} />
+      {/* Wave 11 — a function's own card (when it has a template_id set)
+          needs the event's own identity to render Toran/Kalamkari/Ivory/
+          Stillness correctly (couple names, subject name/years) — Night
+          Bloom/Diya's per-function cards ignore these, they have no couple. */}
       <FunctionRsvps
         passCode={code}
         functions={invite.functions}
+        eventName={invite.eventName}
+        venue={invite.venueName || invite.venueAddress}
+        partner1Name={invite.partner1Name}
+        partner2Name={invite.partner2Name}
+        hostedBy={invite.hostedBy}
+        kickerText={invite.kickerText}
+        subjectNameLine1={invite.subjectNameLine1}
+        subjectNameLine2={invite.subjectNameLine2}
+        subjectYears={invite.subjectYears}
       />
       <GettingThere
         passCode={code}

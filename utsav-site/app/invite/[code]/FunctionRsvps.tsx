@@ -3,6 +3,12 @@
 import { useState } from "react";
 import styles from "./invite.module.css";
 import NightBloomCard from "./NightBloomCard";
+import ToranCover from "./ToranCover";
+import KalamkariCover from "./KalamkariCover";
+import IvoryCover from "./IvoryCover";
+import StillnessCover from "./StillnessCover";
+import DiyaCover from "./DiyaCover";
+import DriftController from "./DriftController";
 
 type EventFunction = {
   id: string;
@@ -32,9 +38,31 @@ function formatFunctionMeta(date: string | null, time: string | null): string {
 export default function FunctionRsvps({
   passCode,
   functions,
+  eventName,
+  venue,
+  partner1Name,
+  partner2Name,
+  hostedBy,
+  kickerText,
+  subjectNameLine1,
+  subjectNameLine2,
+  subjectYears,
 }: {
   passCode: string;
   functions: EventFunction[];
+  // Wave 11 — the event's own identity, needed by a per-function
+  // Toran/Kalamkari/Ivory/Stillness card (they keep the couple/subject
+  // identity, per the brief's decision — only Night Bloom/Diya are
+  // function-only). Night Bloom ignores all of these.
+  eventName: string;
+  venue: string | null;
+  partner1Name: string | null;
+  partner2Name: string | null;
+  hostedBy: string | null;
+  kickerText: string | null;
+  subjectNameLine1: string | null;
+  subjectNameLine2: string | null;
+  subjectYears: string | null;
 }) {
   const [rows, setRows] = useState(functions);
   const [pending, setPending] = useState<string | null>(null);
@@ -72,6 +100,95 @@ export default function FunctionRsvps({
       setRows(prev); // roll back the optimistic update on failure
     } finally {
       setPending(null);
+    }
+  }
+
+  // Wave 11 — per-function card dispatch. Toran/Kalamkari/Ivory/Stillness
+  // reuse the exact whole-event components (functionName/functionDate/
+  // functionTime are new optional props those now accept), wrapped in
+  // their own DriftController instance so each expanded card's Drift
+  // petals get the same pause-after-20s behavior independently of the
+  // cover at the top of the page and of any other expanded function.
+  // Night Bloom/Diya render as before (no couple, function-only content).
+  function renderFunctionCard(f: EventFunction) {
+    switch (f.templateId) {
+      case "nightbloom":
+        return <NightBloomCard name={f.name} date={f.date} time={f.time} headlineText={f.headlineText} />;
+      case "diya":
+        return (
+          <DiyaCover
+            eventName={eventName}
+            eventDate={null}
+            venue={venue}
+            hostedBy={hostedBy}
+            headlineText={f.headlineText}
+            functionName={f.name}
+            functionDate={f.date}
+            functionTime={f.time}
+          />
+        );
+      case "toran":
+        return (
+          <DriftController>
+            <ToranCover
+              eventName={eventName}
+              eventDate={null}
+              venue={venue}
+              partner1Name={partner1Name}
+              partner2Name={partner2Name}
+              hostedBy={hostedBy}
+              functionName={f.name}
+              functionDate={f.date}
+              functionTime={f.time}
+            />
+          </DriftController>
+        );
+      case "kalamkari":
+        return (
+          <DriftController>
+            <KalamkariCover
+              eventName={eventName}
+              eventDate={null}
+              venue={venue}
+              partner1Name={partner1Name}
+              partner2Name={partner2Name}
+              hostedBy={hostedBy}
+              functionName={f.name}
+              functionDate={f.date}
+              functionTime={f.time}
+            />
+          </DriftController>
+        );
+      case "ivory":
+        return (
+          <IvoryCover
+            eventName={eventName}
+            eventDate={null}
+            venue={venue}
+            partner1Name={partner1Name}
+            partner2Name={partner2Name}
+            hostedBy={hostedBy}
+            kickerText={kickerText}
+            functionName={f.name}
+            functionDate={f.date}
+            functionTime={f.time}
+          />
+        );
+      case "stillness":
+        return (
+          <StillnessCover
+            nameLine1={subjectNameLine1}
+            nameLine2={subjectNameLine2}
+            years={subjectYears}
+            detailLine1={null}
+            detailLine2={null}
+            functionName={f.name}
+            functionDate={f.date}
+            functionTime={f.time}
+          />
+        );
+      default:
+        return null;
     }
   }
 
@@ -129,9 +246,7 @@ export default function FunctionRsvps({
             </button>
             {isOpen && (
               <>
-                {f.templateId === "nightbloom" && (
-                  <NightBloomCard name={f.name} date={f.date} time={f.time} headlineText={f.headlineText} />
-                )}
+                {renderFunctionCard(f)}
                 <div className={styles.nbRsvpBtns}>{rsvpBtns}</div>
               </>
             )}

@@ -16,19 +16,44 @@ import { inviteThemes } from "./inviteThemes";
 
 const theme = inviteThemes.stillness;
 
+function formatFunctionDate(dateStr: string | null | undefined): string {
+  if (!dateStr) return "";
+  const d = new Date(dateStr + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+}
+
 export default function StillnessCover({
   nameLine1,
   nameLine2,
   years,
   detailLine1,
   detailLine2,
+  functionName,
+  functionDate,
+  functionTime,
 }: {
   nameLine1: string | null;
   nameLine2: string | null;
   years: string | null;
   detailLine1: string | null;
   detailLine2: string | null;
+  // Wave 11 — set only when this is one function's own card within an
+  // event whose overall design is already Stillness (the gating rule:
+  // Stillness's solemnity is inherited from the event, never independently
+  // set per function). The subject (name/years) is event-level and never
+  // changes per function — only which occasion this card represents, and
+  // its real date/time, do.
+  functionName?: string | null;
+  functionDate?: string | null;
+  functionTime?: string | null;
 }) {
+  const isFunctionCard = !!functionName;
+  // Per-function mode uses the function's own real date/time instead of
+  // the event-level freeform detail lines (which are just host-typed text
+  // for the whole-event card, not backed by real date/time fields there).
+  const detail1 = isFunctionCard ? formatFunctionDate(functionDate) : detailLine1;
+  const detail2 = isFunctionCard ? functionTime : detailLine2;
   return (
     <div className={styles.stillnessStage}>
       <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
@@ -69,22 +94,33 @@ export default function StillnessCover({
           </text>
         )}
 
+        {/* Wave 11 — which function (e.g. a specific prayer meeting) this
+            card is for, when in per-function mode. */}
+        {isFunctionCard && (
+          <text
+            x="200" y="336" textAnchor="middle" fill={theme.colors.dim}
+            fontFamily="'Manrope', sans-serif" fontWeight={600} fontSize={9} letterSpacing={3}
+          >
+            {functionName!.toUpperCase()}
+          </text>
+        )}
+
         <path d="M140 362h120" stroke={theme.colors.soft} strokeWidth={0.8} />
 
-        {detailLine1 && (
+        {detail1 && (
           <text
             x="200" y="396" textAnchor="middle" fill={theme.colors.body}
             fontFamily="'Manrope', sans-serif" fontSize={10.5} letterSpacing={1.4}
           >
-            {detailLine1}
+            {detail1}
           </text>
         )}
-        {detailLine2 && (
+        {detail2 && (
           <text
             x="200" y="420" textAnchor="middle" fill={theme.colors.dim}
             fontFamily="'Manrope', sans-serif" fontSize={9.5} letterSpacing={1.2}
           >
-            {detailLine2}
+            {detail2}
           </text>
         )}
       </svg>
