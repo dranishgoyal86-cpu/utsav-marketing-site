@@ -550,15 +550,16 @@
    others (same "don't let them look synchronized" principle as Toran's
    .petal stagger above). No Drift here on purpose — see DiyaCover.tsx's own
    comment for the reasoning. Unveil (.anim/.aN) is reused unchanged. --- */
+/* Per-lamp duration/delay come from an inline style (DiyaCover.tsx) rather
+   than :nth-of-type — each flame sits alone in its own static positioning
+   <g> (see that file's comment), so sibling-counting selectors can't tell
+   the five lamps apart here. */
 .diyaFlame {
   transform-origin: center;
-  animation: flicker 2.6s ease-in-out infinite;
+  animation-name: flicker;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
-.diyaFlame:nth-of-type(1) { animation-duration: 2.4s; animation-delay: 0ms; }
-.diyaFlame:nth-of-type(2) { animation-duration: 2.9s; animation-delay: 240ms; }
-.diyaFlame:nth-of-type(3) { animation-duration: 2.6s; animation-delay: 480ms; }
-.diyaFlame:nth-of-type(4) { animation-duration: 3.1s; animation-delay: 120ms; }
-.diyaFlame:nth-of-type(5) { animation-duration: 2.7s; animation-delay: 360ms; }
 @keyframes flicker {
   0%, 100% { transform: scale(1); opacity: 0.88; }
   50% { transform: scale(1.08); opacity: 1; }
